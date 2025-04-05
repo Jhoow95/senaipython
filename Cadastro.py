@@ -44,8 +44,29 @@ def adicionar_contato():
     
     id_counter += 1
     messagebox.showinfo("Sucesso", "Contato adicionado com sucesso!")
-#    limpar_campos()
+    limpar_campos()
     atualizar_treeview()
+
+def limpar_campos():
+    nome_entry.delete(0, tk.END)
+    data_entry.delete(0, tk.END)
+    whatsapp_entry.delete(0, tk.END)
+    linkedin_entry.delete(0, tk.END)
+    github_entry.delete(0, tk.END)
+
+def preencher_campos_selecionados(event):
+    item_selecionado = tree.selection()
+    
+    if item_selecionado:
+        valores = tree.item(item_selecionado)['values']
+        
+        limpar_campos()
+        
+        nome_entry.insert(0, valores[1])
+        data_entry.insert(0, valores[2])
+        whatsapp_entry.insert(0, valores[3])
+        linkedin_entry.insert(0, valores[4])
+        github_entry.insert(0, valores[5])
 
 #Configuração inicial
 root = tk.Tk()
@@ -89,11 +110,11 @@ github_entry.grid(row=4, column=1, padx=5, pady=5)
 button_frame = tk.Frame(main_frame)
 button_frame.pack(fill=tk.X, pady=(0, 10))
 
-tk.Button(button_frame, text="Adicionar", command=adicionar_contato).pack(side=tk.LEFT, padx=5)
-tk.Button(button_frame, text="Atualizar", command=None).pack(side=tk.LEFT, padx=5)
-tk.Button(button_frame, text="Excluir", command=None).pack(side=tk.LEFT, padx=5)
-tk.Button(button_frame, text="Limpar", command=None).pack(side=tk.LEFT, padx=5)
-tk.Button(button_frame, text="Localizar", command=None).pack(side=tk.LEFT, padx=5)
+tk.Button(button_frame, text="Adicionar", width=15, command=adicionar_contato).grid(row=0, column=0, padx=10)
+tk.Button(button_frame, text="Atualizar",width=15, command=None).grid(row=0, column=1, padx=10)
+tk.Button(button_frame, text="Excluir",width=15, command=None).grid(row=0,column=2, padx=10)
+tk.Button(button_frame, text="Limpar",width=15, command=limpar_campos).grid(row=0,column=3, padx=10)
+tk.Button(button_frame, text="Localizar",width=15, command=None).grid(row=0,column=4, padx=10)
 
 # Treeview para exibir os contatos
 tree = ttk.Treeview(main_frame, columns=("ID", "Nome", "Nascimento", "WhatsApp", "LinkedIn", "GitHub"), show="headings")
@@ -120,6 +141,6 @@ scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 tree.configure(yscrollcommand=scrollbar.set)
 
 # Evento de seleção na treeview
-tree.bind("<<TreeviewSelect>>",None)  #preencher_campos_selecionados
+tree.bind("<<TreeviewSelect>>",preencher_campos_selecionados)  #preencher_campos_selecionados
 
 root.mainloop()
